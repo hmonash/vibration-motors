@@ -1,34 +1,42 @@
-# Ultrasonic 4-Motor Vibration Controller
+# Ultrasonic Vibration Motor Controller (Direct PWM)
 
-This project uses an Arduino Uno, an Adafruit Motor Shield V2 (TB6612/PCA9685), and an HC-SR04 ultrasonic sensor to control four mini vibration motors. The vibration intensity is mapped to the distance measured by the sensor.
+This project uses an Arduino Uno, a transistor-based motor driver, and an HC-SR04 ultrasonic sensor to control a vibration motor. The vibration intensity is mapped to the distance measured by the sensor.
 
 ## Features
-- Controls 4 DC motors (vibration motors) via I2C.
+- Direct PWM control (no shield required).
 - Proportional feedback: Vibration strength increases as objects get closer.
 - Detection range: 5cm (max vibration) to 50cm (min vibration).
 
 ## Hardware Requirements
 - Arduino Uno
-- TB6612/PCA9685 Motor Shield (Standard I2C V2)
+- NPN Transistor (e.g., PN2222, 2N3904)
+- 1kΩ Resistor
+- 1N4001 Diode (Flyback protection)
 - HC-SR04 Ultrasonic Sensor
-- 4x Mini Vibration Motors
-- 9V Power Supply (connected to Arduino barrel jack)
+- Mini Vibration Motor
 
 ## Wiring
-- **Motors:** Connected to ports M1, M2, M3, and M4 on the shield.
-- **Ultrasonic Sensor:**
-  - VCC -> 5V
-  - Trig -> Pin 9
-  - Echo -> Pin 10
-  - GND -> GND
-- **Power:** Ensure the "VIN Jumper" is placed on the motor shield to share power from the Arduino.
 
-## Software Dependencies
-- [Adafruit Motor Shield V2 Library](https://github.com/adafruit/Adafruit_Motor_Shield_V2_Library)
-- [Adafruit BusIO](https://github.com/adafruit/Adafruit_BusIO)
+### 1. Vibration Motor (via Transistor)
+| Component | Connection A | Connection B |
+| :--- | :--- | :--- |
+| **1kΩ Resistor** | Arduino Pin 3 (PWM) | Transistor Base |
+| **Transistor** | Emitter | Arduino GND |
+| **Transistor** | Collector | Motor (-) Wire |
+| **Motor** | Motor (+) Wire | Arduino 5V |
+| **Diode** | Anode (no stripe) | Motor (-) |
+| **Diode** | Cathode (stripe) | Motor (+) |
+
+### 2. Ultrasonic Sensor (HC-SR04)
+| Sensor Pin | Arduino Pin |
+| :--- | :--- |
+| **VCC** | 5V |
+| **Trig** | Pin 9 |
+| **Echo** | Pin 10 |
+| **GND** | GND |
 
 ## Usage
 1. Open the project in VS Code with PlatformIO.
 2. Connect your Arduino Uno via USB.
 3. Build and Upload the code.
-4. Use the Serial Monitor (9600 baud) to view distance readings.
+4. Use the Serial Monitor (115200 baud) to view distance readings.

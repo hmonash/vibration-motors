@@ -31,7 +31,7 @@ long getDistance() {
 
 void setup() {
   Serial.begin(115200);
-  delay(2000); // Give the serial monitor time to connect
+  delay(5000); // Give the serial monitor time to connect
   
   Serial.println("\n\n--- Starting System ---");
   Serial.println("Direct PWM Motor Controller Initializing...");

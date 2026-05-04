@@ -1,22 +1,15 @@
 #include <Arduino.h>
-#include <Wire.h>
-#include <Adafruit_MotorShield.h>
 
 /*
-  Ultrasonic Sensor to Vibration Motor Controller (Motor Shield V2 Edition)
-  Connects an HC-SR04 ultrasonic sensor to a TB6612/PCA9685 Motor Shield.
-  Uses DC Motor ports 1 and 2 for the vibration motors.
-  When an object is detected within 30cm, the vibration motors activate.
+  Ultrasonic Sensor to Vibration Motor Controller (Direct Transistor/PWM Edition)
+  Connects an HC-SR04 ultrasonic sensor to a vibration motor via a transistor.
+  Uses Pin 3 (PWM) for the vibration motor control.
+  When an object is detected within 50cm, the vibration motor activates.
 */
-
-// Create the motor shield object with the default I2C address
-Adafruit_MotorShield AFMS = Adafruit_MotorShield();
-
-// Select which 'port' M1, M2, M3 and M4.
-Adafruit_DCMotor *motor1 = AFMS.getMotor(1);
 
 const int trigPin = 9;    // HC-SR04 Trigger pin
 const int echoPin = 10;   // HC-SR04 Echo pin
+const int motorPin = 3;   // PWM pin connected to transistor base/gate
 
 // Configuration
 const int maxDistance = 50; // Maximum distance to react (cm)
@@ -41,29 +34,17 @@ void setup() {
   delay(2000); // Give the serial monitor time to connect
   
   Serial.println("\n\n--- Starting System ---");
-  Serial.println("Motor Ultrasonic Controller Initializing...");
+  Serial.println("Direct PWM Motor Controller Initializing...");
   Serial.flush();
-
-  Serial.println("Attempting to initialize Motor Shield...");
-  Serial.flush();
-  
-  if (!AFMS.begin()) {         // create with the default frequency 1.6KHz
-    Serial.println("Could not find Motor Shield. Check wiring.");
-    Serial.flush();
-    while (1);
-  }
-  Serial.println("Motor Shield found.");
-  Serial.flush();
-
-  // Initialize motor to off
-  Serial.println("Initializing motor...");
-  Serial.flush();
-  motor1->run(RELEASE);
 
   Serial.println("Initializing pins...");
   Serial.flush();
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  pinMode(motorPin, OUTPUT);
+
+  // Ensure motor is off
+  analogWrite(motorPin, 0);
 
   Serial.println("Initialization complete!");
   Serial.flush();
@@ -82,11 +63,10 @@ void loop() {
     int constrainedDist = constrain(distance, minDistance, maxDistance);
     int motorSpeed = map(constrainedDist, maxDistance, minDistance, 80, 255);
 
-    motor1->setSpeed(motorSpeed);
-    motor1->run(FORWARD);
+    analogWrite(motorPin, motorSpeed);
   } else {
     // Turn off motor
-    motor1->run(RELEASE);
+    analogWrite(motorPin, 0);
   }
 
   delay(50); // Faster sampling for better responsiveness

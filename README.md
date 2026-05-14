@@ -1,4 +1,12 @@
-# Ultrasonic Vibration Motor Controller (Direct PWM)
+# Cyclosa Spider Defense Tactic Re-creation
+
+![Cyclosa Spider Project](IMG_3600.JPG)
+
+This project is a kinetic art installation that recreates the unique defense tactic of the *Cyclosa* spider. In nature, the spider collects debris in its web and meticulously arranges it into a "decoy" that mimics the shape of a larger spider. When threatened, the *Cyclosa* vibrates its abdomen, causing the decoy to move and appear alive, distracting potential predators.
+
+The sculpture is constructed with a wooden frame, beads, and string to interpret this biological phenomenon. This "debris decoy" is brought to life using vibration motors triggered by an ultrasonic distance sensor. As a viewer approaches, the sensor detects their proximity, activating the motors and causing the beaded structure to shimmer and move—mirroring the spider's own defensive behavior in response to the environment.
+
+## Ultrasonic Vibration Motor Controller (Direct PWM)
 
 This project uses an Arduino Uno, a transistor-based motor driver, and an HC-SR04 ultrasonic sensor to control a vibration motor. The vibration intensity is mapped to the distance measured by the sensor.
 
